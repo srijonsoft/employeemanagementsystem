@@ -37,3 +37,5 @@ Route::resource('admin/employee', 'Admin\\EmployeeController');
 Route::resource('admin/salary-increment', 'Admin\\SalaryIncrementController');
 Route::resource('admin/salary-payment', 'Admin\\SalaryPaymentController');
 Route::post('/salary-info', ['uses' => 'Admin\\SalaryPaymentController@postSalaryInfo', 'as' => 'salary-info']);
+Route::resource('admin/accounting', 'Admin\\AccountingController');
+Route::post('/account-info', ['uses' => 'Admin\\AccountingController@postAccountInfo', 'as' => 'account-info']);

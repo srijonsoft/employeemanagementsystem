@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\SalaryPayment;
 use App\PaymentStatus;
 use App\Employee;
+use App\SalaryPaymetBackup;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
@@ -52,9 +53,20 @@ class SalaryPaymentController extends Controller
     public function store(Request $request)
     {
         
-        SalaryPayment::create($request->all());
+        $this->validate($request, 
+						[
+						'emp_code' 			=> 'required',
+						'salary' 			=> 'required',						
+						'payment_date' 		=> 'required', 
+						'status_id' 		=> 'required', 
+						'payment_amount' 	=> 'required' 
+						]);
 
-        Session::flash('flash_message', 'SalaryPayment added!');
+        SalaryPayment::create($request->all());
+		
+		SalaryPaymetBackup::create($request->all());
+
+        Session::flash('flash_message', 'Salary Payment added!');
 
         return redirect('admin/salary-payment');
     }
@@ -105,13 +117,43 @@ class SalaryPaymentController extends Controller
     public function update($id, Request $request)
     {
         
+        $this->validate($request, 
+						[
+							'emp_code' => 'required', 
+							'payment_date' => 'required', 
+							'status_id' => 'required', 
+							'payment_amount' => 'required',  
+							]);
+
         $salarypayment = SalaryPayment::findOrFail($id);
-        $salarypayment->update($request->all());
+		
+		$payBefore = $salarypayment->payment_amount;
+		$total_salary = $request['payment_amount'] + $payBefore;
+		$salaryInfo = array(
+						'emp_code' 			=> $request['emp_code'],
+						'payment_date'		=> $request['payment_date'],
+						'status_id'			=> $request['status_id'],
+						'payment_amount'	=> $request['payment_amount'] + $payBefore,
+						'due_amount'		=> ''
+					);
+		
+		if(SalaryPayment::where('id', $id)->update($salaryInfo)){
+			
+			$salaryBackup = new SalaryPaymetBackup();
 
-        Session::flash('flash_message', 'SalaryPayment updated!');
+			$salaryBackup->emp_code 		= $request['emp_code'];
+			$salaryBackup->salary 			= $total_salary;
+			$salaryBackup->payment_date 	= $request['payment_date'];
+			$salaryBackup->status_id 		= $request['status_id'];
+			$salaryBackup->payment_amount 	= $request['payment_amount'];
+			
+			$salaryBackup->save();
 
-        return redirect('admin/salary-payment');
-    }
+			Session::flash('flash_message', 'Salary Payment updated!');
+
+			return redirect('admin/salary-payment');
+		}
+	}
 
     /**
      * Remove the specified resource from storage.
