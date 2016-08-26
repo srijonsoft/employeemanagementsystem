@@ -50,7 +50,7 @@
 					<h2>Registration</h2>
 						<hr/>
 
-						{!! Form::open(['url' => '/admin/registration', 'class' => 'form-horizontal']) !!}
+						{!! Form::open(['url' => '/admin/registration', 'files' => true, 'method' => 'post', 'class' => 'form-horizontal']) !!}
 						<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label">Image<span class="error"></span></label>
 						<div class="col-sm-6">
