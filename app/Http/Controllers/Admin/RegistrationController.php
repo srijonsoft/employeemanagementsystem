@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
 use DB;
+use Auth;
+use Illuminate\Http\Response;
+use File;
+use Illuminate\Support\Facades\Storage;
 
 class RegistrationController extends Controller
 {
@@ -46,13 +50,19 @@ class RegistrationController extends Controller
     public function store(Request $request)
     {
 		$this->validate($request, [
-							'fullname' => 'required|max:120',
-							'name' => 'required|min:6',
-							'email' => 'required|unique:users',
-							'password' => 'required',
-							'confirm_password' => 'required|same:password',
+							'fullname' 			=> 'required|max:120',
+							'name' 				=> 'required|min:6',
+							'email' 			=> 'required|unique:users',
+							'password' 			=> 'required',
+							'confirm_password' 	=> 'required|same:password',
 							'status_id'			=> 'required'
 							]);
+							
+		
+        
+        $file = $request->file('image');
+		$filename = $request['name'] . '-' . 1 . '.jpg';
+		Storage::disk('local')->put($filename, File::get($file));
 							
 		$users = new User();
 		
@@ -64,7 +74,7 @@ class RegistrationController extends Controller
 		$users->remember_token	= $request->_token;
 		
 		$users->save();
-
+		
         Session::flash('flash_message', 'Registration added!');
 
         return redirect('admin/registration');
@@ -118,6 +128,11 @@ class RegistrationController extends Controller
 							
 		$registration = User::findOrFail($id);
 		
+		$file = $request->file('image');
+		$filename = $request['name'] . '-' . 1 . '.jpg';
+		Storage::disk('local')->put($filename, File::get($file));
+		
+		
 		$users = array(
 					'fullname' 			=> $request['fullname'],
 					'name'				=> $request['name'],
@@ -142,10 +157,15 @@ class RegistrationController extends Controller
      */
     public function destroy($id)
     {
-        Registration::destroy($id);
+        User::destroy($id);
 
         Session::flash('flash_message', 'Registration deleted!');
 
         return redirect('admin/registration');
+    }
+	public function getUserImage($filename)
+    {
+        $file = Storage::disk('local')->get($filename);
+        return new Response($file, 200);
     }
 }
