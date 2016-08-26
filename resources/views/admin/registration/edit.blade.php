@@ -52,6 +52,7 @@
 				{!! Form::model($registration, [
 					'method' => 'PATCH',
 					'url' => ['/admin/registration', $registration->id],
+					'files' => true,
 					'class' => 'form-horizontal'
 				]) !!}
 
@@ -60,7 +61,7 @@
 						<div class="col-sm-6">
 							<div class="fileinput fileinput-new" data-provides="fileinput">
 								<div class="fileinput-new thumbnail" style="width: 100px; height: 100px;" data-trigger="fileinput">
-									<img src="http://creativeitem.com/demo/ekattor/uploads/user.jpg" alt="...">
+									<img src="{{ route('account.image', ['name' => $registration->name . '-' . 1 . '.jpg'])}}" alt="...">
 								</div>
 								<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px"></div>
 								<div>
