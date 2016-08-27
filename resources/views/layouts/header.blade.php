@@ -254,11 +254,14 @@
           </li>
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
+			@if(Storage::disk('local')->has(Session::get('name') . '-' . 1 . '.jpg'))
+			
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              
-			  {!! HTML::image('resources/assets/dist/img/user4-128x128.jpg', 'User Image', array('class' => 'user-image')) !!}
-              <span class="hidden-xs">{{ Session::get('name') }}</span>
+              <img src="{{ route('account.image', ['name' => Session::get('name') . '-' . 1 . '.jpg'])}}" class="user-image" >
+			  
+			 <span class="hidden-xs">{{ Session::get('name') }}</span>
             </a>
+			@endif
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
@@ -305,9 +308,12 @@
     <section class="sidebar">
       <!-- Sidebar user panel -->
       <div class="user-panel">
-        <div class="pull-left image">
-		  {!! HTML::image('resources/assets/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'img-circle')) !!}
-        </div>
+	  
+		@if(Storage::disk('local')->has(Session::get('name') . '-' . 1 . '.jpg'))
+            <div class="pull-left image">
+              <img src="{{ route('account.image', ['name' => Session::get('name') . '-' . 1 . '.jpg'])}}" class="img-circle">
+             </div>
+		  @endif
         <div class="pull-left info">
           <p>{{ Session::get('name') }}</p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
