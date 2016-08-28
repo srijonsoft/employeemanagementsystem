@@ -67,7 +67,7 @@ class LeaveApplicationController extends Controller
 		$leave->start_date		= $request['start_date'];
 		$leave->ending_date		= $request['ending_date'];
 		$leave->purpose			= $request['purpose'];
-		$leave->status			= 3;
+		$leave->status_id			= 3;
 		
 		$leave->save();
 
