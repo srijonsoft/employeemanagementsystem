@@ -42,68 +42,115 @@
             <div class="box-body">
 				<h2>Mailbox</h2>
 				<hr />
-				<div class="table">
+				
+				<!-- Stack the columns on mobile by making one full-width and the other half-width -->
+				<div class="row">
+				
+				<div class="col-md-9">
+				{!! Form::open(['url' => '/admin/delete-mail', 'class' => 'form-horizontal', 'onSubmit' => 'return validate();']) !!}		
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<tr>
+								<th style="width: 98px;">
+								<div class="checkbox radio-margin">
+									<label>
+										<input type="checkbox" id="checkAll" value="">
+										<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+
+									</label>
+									<div class="box-tools pull-right" style="margin-top:-5px;">
+										<button type="submit" id="delete" class="btn btn-danger">
+										<i class="fa fa-trash-o"></i>&nbsp;</button>
+									</div>
+								</div>
+								</th>
+								<th>Name</th>
+								<th>Date</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{-- */$x=0;/* --}}
+							@foreach($mailbox as $item)
+								{{-- */$x++;/* --}}
+								<tr id="mailboxtr">
+									<td>
+										<div class="checkbox radio-margin">
+											<label>
+												<input type="checkbox" name="checkbox[]" id="checkbox[]" value="{{ $item->id }}">
+												<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+											</label>
+										</div>
+									
+									</td>
+									<td>{{ $item->name }}</td>
+									<td>{{ $item->created_at }}</td>
+									<td>{{ $item->letitle }}</td>	
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+					<div class="pagination-wrapper"> {!! $mailbox->render() !!} </div>
+				</div>
+				{!! Form::close() !!}
+				</div>
+				<div class="col-md-3">
+					<div class="table-responsive">
 					<table class="table table-bordered table-striped table-hover">
 						<thead>
 							<tr>
 								<th>
 								<div class="checkbox radio-margin">
 									<label>
-										<input type="checkbox" value="">
-										<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+										Action								
 									</label>
 								</div>
 								</th>
-								<th>Name</th>
-								<th>Date</th>
-								<th>Status</th>
-								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
-						{{-- */$x=0;/* --}}
-						@foreach($mailbox as $item)
-							{{-- */$x++;/* --}}
-							<tr>
-								<td>
-								<div class="checkbox radio-margin">
-									<label>
-										<input type="checkbox" value="">
-										<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-									</label>
-								</div>
-								</td>
-								<td>{{ $item->name }}</td>
-								<td>{{ $item->created_at }}</td>
-								<td>{{ $item->letitle }}</td>
-								<td>
-									<a href="{{ url('/admin/mail-box/' . $item->id) }}" class="btn btn-success btn-xs" title="View MailBox"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/></a>
-									<a href="{{ url('/admin/mail-box/' . $item->id . '/edit') }}" class="btn btn-primary btn-xs" title="Edit MailBox"><span class="glyphicon glyphicon-pencil" aria-hidden="true"/></a>
-									{!! Form::open([
-										'method'=>'DELETE',
-										'url' => ['/admin/mail-box', $item->id],
-										'style' => 'display:inline'
-									]) !!}
-										{!! Form::button('<span class="glyphicon glyphicon-trash" aria-hidden="true" title="Delete MailBox" />', array(
-												'type' => 'submit',
-												'class' => 'btn btn-danger btn-xs',
-												'title' => 'Delete MailBox',
-												'onclick'=>'return confirm("Confirm delete?")'
-										));!!}
-									{!! Form::close() !!}
-								</td>
-							</tr>
-						@endforeach
+							{{-- */$x=0;/* --}}
+							@foreach($mailbox as $item)
+								{{-- */$x++;/* --}}
+								<tr id="mailboxtr">
+									<td>
+										
+											<label>
+												<a href="{{ url('/admin/mail-box/' . $item->id) }}" class="btn btn-success btn-xs" title="View MailBox"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"/></a>
+												<a href="{{ url('/admin/mail-box/' . $item->id . '/edit') }}" class="btn btn-primary btn-xs" title="Edit MailBox"><span class="glyphicon glyphicon-pencil" aria-hidden="true"/></a>
+												{!! Form::open([
+													'method'=>'DELETE',
+													'url' => ['/admin/mail-box', $item->id],
+													'style' => 'display:inline'
+												]) !!}
+													{!! Form::button('<span class="glyphicon glyphicon-trash" aria-hidden="true" title="Delete MailBox" />', array(
+															'type' => 'submit',
+															'class' => 'btn btn-danger btn-xs',
+															'title' => 'Delete MailBox',
+															'onclick'=>'return confirm("Confirm delete?")'
+													));!!}
+												{!! Form::close() !!}
+											
+											</label>
+										
+									
+									</td>	
+								</tr>
+							@endforeach
 						</tbody>
 					</table>
-					<div class="pagination-wrapper"> {!! $mailbox->render() !!} </div>
 				</div>
-            <!-- ./box-body -->
-          </div>
+				</div>
+								</div>
+
+			</div>
+            </div>
           <!-- /.box -->
         </div>
         <!-- /.col -->
       </div>
+	  </div>
       <!-- /.row -->
     </section>
     <!-- /.content -->
@@ -127,6 +174,27 @@
       
     </div>
   </div>
+<script language="javascript">
+	function validate()
+	{
+	var chks = document.getElementsByName('checkbox[]');
+	var hasChecked = false;
+	for (var i = 0; i < chks.length; i++)
+	{
+	if (chks[i].checked)
+	{
+	hasChecked = true;
+	break;
+	}
+	}
+	if (hasChecked == false)
+	{
+	alert("Please select at least one.");
+	return false;
+	}
+	return true;
+	}
+</script>
 </div>
 <!-- /.content-wrapper -->
 @endsection
