@@ -26,6 +26,11 @@ class MailBoxController extends Controller
 				->select('leave_applications.*','leave_status.title as letitle')
 				->paginate(15);
 
+				
+		$mail = count($mailbox);
+
+		Session::put('mailno',$mail);
+				
         return view('admin.mail-box.index', compact('mailbox'));
     }
 
@@ -127,4 +132,16 @@ class MailBoxController extends Controller
 
         return redirect('admin/mail-box');
     }
+	public function deleteMails(Request $request){
+		
+		
+		for($i=0;$i<count($_POST['checkbox']);$i++){
+		$id=$_POST['checkbox'][$i];
+		 LeaveApplication::destroy($id);
+		 
+		 return redirect('admin/mail-box');
+		}
+
+		
+	}
 }
