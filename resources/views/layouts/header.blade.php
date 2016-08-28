@@ -264,13 +264,14 @@
 			@endif
             <ul class="dropdown-menu">
               <!-- User image -->
+			  @if(Storage::disk('local')->has(Session::get('name') . '-' . 1 . '.jpg'))
               <li class="user-header">
-                
-				{!! HTML::image('resources/assets/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'img-circle')) !!}
+                <img src="{{ route('account.image', ['name' => Session::get('name') . '-' . 1 . '.jpg'])}}" class="img-circle" >
                 <p>
 				{{ Session::get('name') }} - Admin
                 </p>
               </li>
+			  @endif
               <!-- Menu Body -->
               <li class="user-body">
                 <div class="row">
@@ -448,12 +449,12 @@
           </a>
         </li>
         <li>
-          <a href="pages/mailbox/mailbox.html">
+          <a href="{!! url('admin/mail-box') !!}">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>
             <span class="pull-right-container">
-              <small class="label pull-right bg-yellow">12</small>
-              <small class="label pull-right bg-green">16</small>
-              <small class="label pull-right bg-red">5</small>
+              <small class="label pull-right bg-yellow">{{ Session::get('mailno') }}</small>
+              <?php /*<small class="label pull-right bg-green">16</small>
+              <small class="label pull-right bg-red">5</small>*/?>
             </span>
           </a>
         </li>
