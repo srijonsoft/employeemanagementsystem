@@ -10,9 +10,18 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
 use Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserLoginController extends Controller
 {
+	
+	public function __construct()
+    {
+         $this->middleware('auth', ['only' => 'index']);
+		//$this->middleware('auth', ['only' => 'show']);
+		//$this->middleware('auth', ['except' => array('index','show')]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,6 +29,8 @@ class UserLoginController extends Controller
      */
     public function index()
     {
+            
+      
         $userlogin = UserLogin::paginate(15);
 
         return view('admin.user-login.index', compact('userlogin'));
@@ -46,10 +57,11 @@ class UserLoginController extends Controller
 
         $user = array('name' => $request->name, 'password' => $request->password);
 		
+		
 		if(Auth::attempt($user)){
 			
 			Session::put('name', $request->name);
-			
+		
 			Session::flash('flash_message', 'Login added!');
 			
 			return redirect('admin/user-login');
@@ -70,9 +82,9 @@ class UserLoginController extends Controller
      */
     public function show($id)
     {
-        $userlogin = UserLogin::findOrFail($id);
+        //$userlogin = UserLogin::findOrFail($id);
 
-        return view('admin.user-login.show', compact('userlogin'));
+        return view('admin.user-login.create');
     }
 
     /**
@@ -84,9 +96,9 @@ class UserLoginController extends Controller
      */
     public function edit($id)
     {
-        $userlogin = UserLogin::findOrFail($id);
+        //$userlogin = UserLogin::findOrFail($id);
 
-        return view('admin.user-login.edit', compact('userlogin'));
+        return view('admin.user-login.create');
     }
 
     /**
